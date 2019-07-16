@@ -1,0 +1,12 @@
+#container {
+    float: left;
+    width: 1000px;
+    background-color: lightgray;
+}
+
+.cell {
+    display: inline-block;
+    margin: 5px 4px;
+    color: black;
+    background-color: white;
+}
