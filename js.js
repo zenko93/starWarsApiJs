@@ -133,13 +133,22 @@ function addDataToDescription(dataIn, elem) {
                 }
             }
             keys.forEach((element) => {
+                if(element === 'films') return;
                     let div = document.createElement('div');
                     div.innerHTML = `${element} :`;
                     descrKeys.appendChild(div);
             });
             values.forEach((element) => {
+                if(element.includes('https://')){
+                    let a = document.createElement('a');
+                    a.innerHTML = element;
+                    a.href = element.value;
+                    descrValues.appendChild(a);
+                    return;
+                }
                     let div = document.createElement('div');
                     div.innerHTML = element;
+                    if(div.innerHTML.includes('films')) return;
                     descrValues.appendChild(div);
             });
     })

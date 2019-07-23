@@ -120,3 +120,7 @@ li:hover {
 .visible {
     visibility: visible;
 }
+
+a {
+    cursor: pointer;
+}
