@@ -171,10 +171,5 @@ function filterListData() {
 }
 
 
-// function checkListOpen() {
-//     list.className = list.className === 'visible'? 'hidden' :'visible';
-// }
-
-
 
 
