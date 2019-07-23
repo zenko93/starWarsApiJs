@@ -120,10 +120,3 @@ li:hover {
 .visible {
     visibility: visible;
 }
-.hidden {
-    visibility: hidden;
-}
-
-.backcolor {
-    background-color: orange;
-}
