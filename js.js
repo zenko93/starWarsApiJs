@@ -14,6 +14,7 @@ search.addEventListener('input', input);
 list.addEventListener("click", openDescription);
 
 
+
 async function getData(dataIn) {
     try {
         let response = await fetch(`https://swapi.co/api/${dataIn}`);
@@ -112,12 +113,14 @@ function openDescription(elem){
 }
 
 
+
 function clearDescription(){
     if(descrKeys.innerHTML || descrValues.innerHTML){
         descrKeys.innerHTML = '';
         descrValues.innerHTML = '';
     }
 }
+
 
 
 function addDataToDescription(dataIn, elem) {
@@ -134,9 +137,9 @@ function addDataToDescription(dataIn, elem) {
             }
             keys.forEach((element) => {
                 if(element === 'films') return;
-                    let div = document.createElement('div');
-                    div.innerHTML = `${element} :`;
-                    descrKeys.appendChild(div);
+                let div = document.createElement('div');
+                div.innerHTML = `${element} :`;
+                descrKeys.appendChild(div);
             });
             values.forEach((element) => {
                 if(element.includes('https://')){
@@ -146,10 +149,10 @@ function addDataToDescription(dataIn, elem) {
                     descrValues.appendChild(a);
                     return;
                 }
-                    let div = document.createElement('div');
-                    div.innerHTML = element;
-                    if(div.innerHTML.includes('films')) return;
-                    descrValues.appendChild(div);
+                let div = document.createElement('div');
+                div.innerHTML = element;
+                if(div.innerHTML.includes('films')) return;
+                descrValues.appendChild(div);
             });
     })
 }
