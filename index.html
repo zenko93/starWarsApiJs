@@ -7,8 +7,10 @@
     <script src="js.js" defer></script>
 </head>
 <body>
+
+
 <div class="imageBack"></div>
-    <div class="container">
+    <div class="container" >
         <header class="header">
             <div class="menu people">PEOPLE</div>
             <div class="menu starships">STARSHIPS</div>
@@ -17,7 +19,9 @@
         <main class="main">
             <div class="left-menu">
                 <input class="search" placeholder="search">
-                <ul class="list"></ul>
+                <div class="listContainer">
+                    <ul class="list"></ul>
+                </div>
             </div>
             <div class="right-menu">
                 <div class="title">DESCRIPTION</div>
@@ -26,7 +30,25 @@
                     <div class="values"></div>
                 </div>
             </div>
+            <div class="b-popup hidden" >
+                <div class="b-popup-content">
+                    <div class="title-reg">REGISTRATION</div>
+                    <button class="close">X</button>
+                    <form class="inputs">
+                        <input class="first-name" type="text" placeholder="FIRST NAME" autofocus/>
+                        <input class="last-name" type="text" placeholder="LAST NAME"/>
+                        <input class="email" type="email" placeholder="EMAIL"/>
+                        <input class="birthday" type="date" placeholder="BIRTHDATE"/>
+                        <input class="password" type="password" placeholder="PASSWORD"/>
+                        <input class="password-confirm" type="password" placeholder="PASSWORD CONFIRMATION"/>
+                        <!--<input class="confirm" type="submit"/>-->
+                    </form>
+                    <span class="error-mesage"></span>
+                    <button class="confirm">CONFIRM</button>
+                </div>
+            </div>
         </main>
+        <button class="reg-button">REGISTRATION</button>
     </div>
 </body>
 </html>
