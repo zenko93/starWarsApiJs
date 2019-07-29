@@ -48,9 +48,10 @@ html {
 .main {
     display: flex;
     justify-content: left;
+    position: relative;
     padding-top: 30px;
     border-top: 1px solid black;
-    border-bottom: 1px solid black;
+    /*border-bottom: 1px solid black;*/
     height: 450px;
 }
 
@@ -101,7 +102,7 @@ li:hover {
     line-height: 20px;
     font-size: 16px;
     min-width: 1000px;
-    border: 1px solid black;
+    /*border: 1px solid black;*/
 }
 .title {
     display: block;
@@ -114,22 +115,29 @@ li:hover {
 .right-menu .description .keys {
     display: inline-block;
     padding: 5px;
-
-    border: 1px solid red;
+    min-height: 380px;
+    /*border: 1px solid red;*/
 }
 
-.spanBlock {
+.divA {
+    min-height: 330px;
     margin-bottom: 30px;
-    border: 1px solid violet;
+    /*border: 1px solid violet;*/
+}
+
+.divB {
+    min-height: 330px;
+    margin-bottom: 30px;
+    /*border: 1px solid green;*/
 }
 
 .right-menu .description .values {
     vertical-align: top;
     display: inline-block;
+    min-height: 380px;
+
     padding: 5px;
-    border: 1px solid blue;
-
-
+    /*border: 1px solid blue;*/
 }
 
 
@@ -202,8 +210,9 @@ a {
 
 
 .reg-button {
-    display: flex;
-    margin: 0 auto;
+    position: absolute;
+    margin-top: -15px;
+    margin-left: 10px;
     cursor: pointer;
 }
 

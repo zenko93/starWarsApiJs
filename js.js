@@ -18,12 +18,12 @@ let menuElement = ['people', 'starships', 'planets'];
 
 
 header.addEventListener("click", openList);
-search.addEventListener('input', filterListData);
+search.addEventListener('input', searchListData);
 list.addEventListener("click", openDescription);
 regBtn.addEventListener("click", regButtonClick);
 closeBtn.addEventListener('click', closeReg);
 confirmBtn.addEventListener("click", confirmClick);
-list.addEventListener('change', changeCheckBox);
+list.addEventListener('change', addDataWithCheckBox);
 
 async function getData(dataIn) {
     try {
@@ -160,62 +160,62 @@ function addDataToDescription(dataIn, target) {
                     values = Object.values(data[i]);
                 }
             }
-            let spanKey = document.createElement('span');
-            spanKey.classList.add('spanBlock');
-
+            let divA = document.createElement('div');
+            divA.classList.add('divA');
             keys.forEach(element => {
-                if(element === 'films' || element === 'residents' || element === 'pilots') {
-                    return;
-                }
-                let div = document.createElement('div');
-                div.innerHTML = `${element} :`;
-                spanKey.appendChild(div);
+                filterKeysData(divA, element)
             });
-            descrKeys.append(spanKey);
+            descrKeys.appendChild(divA);
 
-            console.log(descrKeys)
-            let spanValue = document.createElement('span');
-            spanValue.classList.add('spanBlock');
-
+            let divB = document.createElement('div');
+            divB.classList.add('divB');
             values.forEach(element => {
-                // if(element.includes('https://')){
-                //     let a = document.createElement('a');
-                //     a.innerHTML = element;
-                //     a.href = element.value;
-                //     spanValue.appendChild(a);
-                // }
-                // else{
-                    let div = document.createElement('div');
-                    div.innerHTML = element;
-                    if(div.innerHTML.includes('films') || div.innerHTML.includes('people')){
-                        return;
-                    }
-                    spanValue.appendChild(div);
-                // }
-                descrValues.append(spanValue);
+                filterValuesData(divB, element);
             });
-
+            descrValues.appendChild(divB);
     })
 }
 
-function changeCheckBox(elem) {
-    let checkBoxList = document.querySelectorAll('.check-box');
+
+function filterKeysData (divA, element){
+    if(element === 'films' || element === 'residents' || element === 'pilots') {
+        return;
+    }
+    let div = document.createElement('div');
+    div.innerHTML = `${element} :`;
+    divA.appendChild(div);
+}
+
+
+function filterValuesData(divB, element) {
+    let div = document.createElement('div');
+    div.innerHTML = element;
+    if(div.innerHTML.includes('films') || div.innerHTML.includes('people')){
+        return;
+    }
+    divB.appendChild(div);
+}
+
+
+function addDataWithCheckBox(elem) {
     let target = elem.target;
 
-    for (let i = 0; i < checkBoxList.length; i++) {
-        if(checkBoxList[i].checked){
-            console.log(checkBoxList[i]);
-            console.log(target.getAttribute('name'));
-            addDataToDescription('people', target.getAttribute('name'));
-        }
+    if(target.checked){
+        console.log(target.getAttribute('name'));
+        addDataToDescription('people', target.getAttribute('name'));
     }
 }
 
-function filterListData() {
-    let val = search.value.toLowerCase();
-    let list = ul.children;
+
+function searchListData() {
+    let val = search.value;
+    let valUp = val.toUpperCase();
+    let valLow = val.toLowerCase();
+
+    let list = document.querySelectorAll('.li');
+    console.log(list);
     for (let i = 0; i < list.length ; i++) {
-        !list[i].innerHTML.includes(val) ? list[i].hidden = true : list[i].hidden = false;
+        !list[i].innerHTML.includes(valUp || valLow) ? list[i].hidden = true : list[i].hidden = false;
     }
 }
 
@@ -249,8 +249,8 @@ function confirmClick() {
         else {
             errorMesage.innerHTML = '';
         }
-
     }
+
     checkName();
     checkEmail();
     checkPassword();
@@ -267,10 +267,10 @@ function checkName() {
 
     if (!isNaN(firstName.value) || firstName.value.length < 2){
         firstName.focus();
-        firstName.classList.add('error');
+        // firstName.classList.add('error');
         alert('Некоректное имя')
     }
-    if (!isNaN(lastName.value) || lastName.value.length < 2){
+    else if(!isNaN(lastName.value) || lastName.value.length < 2){
         lastName.focus();
         alert('Некоректная фамилия')
     }
@@ -281,6 +281,7 @@ function checkEmail() {
     let email = document.querySelector('.email');
 
     if(!email.value.includes('@')){
+        email.focus();
         alert('Некоректная почта')
     }
 }
@@ -295,10 +296,11 @@ function checkPassword() {
     let string = /\D/.test(pasValue);
 
     if(pasValue.length < 6 || !number || !string){
+        pas.focus();
         alert('минимальное количество символов в пороле 6 из которых должна быть одна цифра и одна буква');
     }
 
-    if(pasValue !== pasConValue){
+    else if(pasValue !== pasConValue){
         pasConfirm.focus();
         alert('пороль не подтвержден');
     }
@@ -309,7 +311,13 @@ function checkData() {
     let date = document.querySelector('.birthday');
     let dateArr = date.value.split('-');
 
-    if(dateArr[0] > 2019){
+    if (!isNaN(date.value)){
+        date.focus();
+        alert('Заполните дату рождения')
+    }
+    else if(dateArr[0] > 2019){
+        date.focus();
+        date.classList.add('error');
         alert('Кажется вы ошиблись годом')
     }
 }
