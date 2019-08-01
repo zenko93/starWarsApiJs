@@ -1,19 +1,20 @@
 let header = document.querySelector('.header');
 let menu = document.querySelectorAll('.menu');
 let list = document.querySelector('.list');
-let ul = document.querySelector('ul');
-let description = document.querySelector('.description');
 let descrKeys = document.querySelector('.keys');
 let descrValues = document.querySelector('.values');
 let search = document.querySelector('.search');
 let title = document.querySelector('.title');
 let backPopup = document.querySelector('.b-popup');
 let regBtn = document.querySelector('.reg-button');
-let closeBtn = document.querySelector('.close');
 let confirmBtn = document.querySelector('.confirm');
-let errorMesage = document.querySelector('.error-mesage');
-let popupContent = document.querySelector('.b-popup-content');
-let inputs = document.querySelector('.inputs');
+let errorName = document.querySelector('.errorName');
+let errorLastName = document.querySelector('.errorLastName');
+let errorEmail = document.querySelector('.errorEmail');
+let errorBirthday = document.querySelector('.errorBirthday');
+let errorPass = document.querySelector('.errorPass');
+let errorConfirmPass = document.querySelector('.errorConfirmPass');
+let errors = document.querySelector('.errors');
 let menuElement = ['people', 'starships', 'planets'];
 
 
@@ -21,9 +22,11 @@ header.addEventListener("click", openList);
 search.addEventListener('input', searchListData);
 list.addEventListener("click", openDescription);
 regBtn.addEventListener("click", regButtonClick);
-closeBtn.addEventListener('click', closeReg);
-confirmBtn.addEventListener("click", confirmClick);
+backPopup.addEventListener('click', popupUpHide);
+confirmBtn.addEventListener("click", checkErrors);
 list.addEventListener('change', addDataWithCheckBox);
+
+
 
 async function getData(dataIn) {
     try {
@@ -47,7 +50,6 @@ function openList(elem) {
         return;
     }
 
-    showElement(search);
     menuElement.forEach(e => checkList(e, target));
     menuElement.forEach(e => menuElemDecoration(e, target));
 }
@@ -57,6 +59,7 @@ function openList(elem) {
 function checkList(typeList, target) {
     if(target.classList.contains(typeList)){
         clearList();
+        showElement(search);
         list.setAttribute('nameList', typeList);
         if(!list.innerHTML){
             addDataToList(typeList);
@@ -149,11 +152,13 @@ function clearDescription(){
 }
 
 
+
 function addDataToDescription(dataIn, target) {
     getData(dataIn)
         .then(data => {
             let keys;
             let values;
+
             for (let i = 0; i < data.length; i++) {
                 if(target.innerHTML === data[i].name || target === data[i].name){
                     keys = Object.keys(data[i]);
@@ -169,11 +174,12 @@ function addDataToDescription(dataIn, target) {
 
             let divB = document.createElement('div');
             divB.classList.add('divB');
+            divB.setAttribute('name', target);
             values.forEach(element => {
                 filterValuesData(divB, element);
             });
             descrValues.appendChild(divB);
-    })
+        })
 }
 
 
@@ -199,23 +205,33 @@ function filterValuesData(divB, element) {
 
 function addDataWithCheckBox(elem) {
     let target = elem.target;
+    let name = target.getAttribute('name');
+    let divValues = descrValues.children;
 
     if(target.checked){
-        console.log(target.getAttribute('name'));
-        addDataToDescription('people', target.getAttribute('name'));
+        showElement(title);
+        addDataToDescription(list.getAttribute('nameList'), name);
+    }
+    else {
+        for (let i = 0; i < divValues.length; i++) {
+            if(name === divValues[i].getAttribute('name')){
+                divValues[i].hidden = true;
+                descrKeys.children[i].hidden = true;
+            }
+        }
     }
 }
 
 
 function searchListData() {
     let val = search.value;
-    let valUp = val.toUpperCase();
     let valLow = val.toLowerCase();
-
+    let arrList = [];
     let list = document.querySelectorAll('.li');
-    console.log(list);
+
     for (let i = 0; i < list.length ; i++) {
-        !list[i].innerHTML.includes(valUp || valLow) ? list[i].hidden = true : list[i].hidden = false;
+        arrList.push(list[i].innerHTML.toLowerCase());
+        !arrList[i].includes(valLow) ? list[i].hidden = true: list[i].hidden = false;
     }
 }
 
@@ -230,49 +246,64 @@ function regButtonClick() {
 }
 
 
-function closeReg() {
-    backPopup.classList.toggle('hidden');
+function popupUpHide(elem) {
+    let target = elem.target;
+
+    if(target.className === 'b-popup' || target.className === 'close') {
+        backPopup.classList.toggle('hidden');
+    }
 }
 
 
-function confirmClick() {
-    let inputList = inputs.children;
+function checkErrors() {
+    let childrenErr = errors.children;
     let isFilled = true;
-
-    for (let i = 0; i < inputList.length; i++) {
-        isFilled = isFilled && ( /\S/.test(inputList[i].value));
-
-        if(!/\S/.test(inputList[i].value)){
-            inputList[i].classList.add('error');
-            errorMesage.innerHTML = 'Заполните все поля';
-        }
-        else {
-            errorMesage.innerHTML = '';
-        }
-    }
-
     checkName();
+    checkSurname();
     checkEmail();
     checkPassword();
+    checkConfirmPass();
     checkData();
-    if(isFilled) {
+
+    for (let i = 0; i < childrenErr.length ; i++) {
+        isFilled = isFilled && (childrenErr[i].innerHTML === '');
+    }
+    if (isFilled){
         backPopup.classList.add('hidden');
     }
 }
 
 
+
 function checkName() {
     let firstName = document.querySelector('.first-name');
-    let lastName = document.querySelector('.last-name');
+    let noNumber = /\d/.test(firstName.value);
+    let noSymbol = /\s/.test(firstName.value);
 
-    if (!isNaN(firstName.value) || firstName.value.length < 2){
+    if ( noSymbol || noNumber || firstName.value.length < 2){
         firstName.focus();
-        // firstName.classList.add('error');
-        alert('Некоректное имя')
+        errorName.innerHTML = 'Некоректное имя';
+        firstName.classList.add('error');
     }
-    else if(!isNaN(lastName.value) || lastName.value.length < 2){
+    else {
+        firstName.classList.remove('error');
+        errorName.innerHTML = '';
+    }
+}
+
+function checkSurname() {
+    let lastName = document.querySelector('.last-name');
+    let noNumber = /\d/.test(lastName.value);
+    let noSymbol = /\s/.test(lastName.value)
+
+    if( noSymbol || noNumber || lastName.value.length < 2){
         lastName.focus();
-        alert('Некоректная фамилия')
+        errorLastName.innerHTML = 'Некоректная фамилия';
+        lastName.classList.add('error');
+    }
+    else {
+        errorLastName.innerHTML = '';
+        lastName.classList.remove('error');
     }
 }
 
@@ -282,27 +313,49 @@ function checkEmail() {
 
     if(!email.value.includes('@')){
         email.focus();
-        alert('Некоректная почта')
+        errorEmail.innerHTML = 'Некоректная почта';
+        email.classList.add('error');
+    }
+    else {
+        errorEmail.innerHTML = '';
+        email.classList.remove('error');
     }
 }
 
 
 function checkPassword() {
     let pas = document.querySelector('.password');
-    let pasConfirm = document.querySelector('.password-confirm');
     let pasValue = pas.value;
-    let pasConValue = pasConfirm.value;
     let number = /\d/.test(pasValue);
     let string = /\D/.test(pasValue);
 
     if(pasValue.length < 6 || !number || !string){
         pas.focus();
-        alert('минимальное количество символов в пороле 6 из которых должна быть одна цифра и одна буква');
+        errorPass.innerHTML = 'Пороль должен содержать 6 символов из которых минимум 1 буква и 1 цифра.';
+        pas.classList.add('error');
     }
+    else {
+        errorPass.innerHTML = '';
+        pas.classList.remove('error');
+    }
+}
 
-    else if(pasValue !== pasConValue){
+
+function checkConfirmPass() {
+    let pas = document.querySelector('.password');
+    let pasConfirm = document.querySelector('.password-confirm');
+
+    if(pas.value !== pasConfirm.value){
         pasConfirm.focus();
-        alert('пороль не подтвержден');
+        errorConfirmPass.innerHTML = 'Пороль не совпадает';
+        pasConfirm.classList.add('error');
+    }
+    else if(pas.value === ''){
+        pasConfirm.classList.add('error');
+    }
+    else {
+        errorConfirmPass.innerHTML = '';
+        pasConfirm.classList.remove('error');
     }
 }
 
@@ -313,12 +366,17 @@ function checkData() {
 
     if (!isNaN(date.value)){
         date.focus();
-        alert('Заполните дату рождения')
+        errorBirthday.innerHTML = 'Заполните дату рождения';
+        date.classList.add('error');
     }
     else if(dateArr[0] > 2019){
         date.focus();
         date.classList.add('error');
-        alert('Кажется вы ошиблись годом')
+        errorBirthday.innerHTML = 'Кажется вы ошиблись годом';
+    }
+    else {
+        errorBirthday.innerHTML = '';
+        date.classList.remove('error');
     }
 }
 
